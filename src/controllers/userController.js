@@ -4,50 +4,36 @@ const jwt = require("jsonwebtoken");
 const UserModal = require("../models/userModel");
 
 exports.signIn = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const existingUser = await UserModal.findOne({ email });
-    if (!existingUser)
-      return res
-        .status(404)
-        .json({ status: false, message: "User doesn't exist" });
+	const {email} = req.body;
+	try {
+		const existingUser = await UserModal.findOne({email});
+		if (!existingUser)
+			return res.status(404).json({status: false, message: "User doesn't exist"});
 
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      existingUser.password
-    );
+		const token = jwt.sign(
+			{
+				id: existingUser._id,
+				email: existingUser.email,
+			},
+			process.env.JWT_PRIVATE_KEY,
+			{
+				expiresIn: '24h',
+			}
+		);
 
-    if (!isPasswordCorrect)
-      return res
-        .status(401)
-        .json({ status: false, message: "Invalid password" });
-
-    const token = jwt.sign(
-      {
-        id: existingUser._id,
-        email: existingUser.email,
-      },
-      process.env.JWT_PRIVATE_KEY,
-      {
-        expiresIn: "24h",
-      }
-    );
-
-    res.status(200).json({
-      staus: true,
-      message: "Sign In Success",
-      result: {
-        userName: existingUser.userName,
-        email: existingUser.email,
-      },
-      token,
-    });
-  } catch (err) {
-    console.log(err);
-    return res
-      .status(500)
-      .json({ status: false, message: "Something went wrong" });
-  }
+		res.status(200).json({
+			staus: true,
+			message: 'Sign In Success',
+			result: {
+				userName: existingUser.userName,
+				email: existingUser.email,
+			},
+			token : token,
+		});
+	} catch (err) {
+		console.log(err);
+		return res.status(500).json({status: false, message: 'Something went wrong'});
+	}
 };
 
 exports.signUp = async (req, res) => {
