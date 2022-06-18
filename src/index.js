@@ -4,6 +4,9 @@ dotenv.config();
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
 
 // middleware
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
