@@ -11,9 +11,14 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cors());
 
 // routers
+app.get('/',(req,res)=>{
+  console.log("kkk");
+  res.send("service 2 running Succesfully")
+})
+
 app.use("/api/user", require("./routes/userRoutes"));
 
-const PORT = process.env.PORT || 1338;
+const PORT = process.env.PORT || 5010;
 
 mongoose
   .connect(process.env.MONGO_URI, {
