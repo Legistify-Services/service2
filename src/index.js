@@ -18,7 +18,7 @@ app.get('/',(req,res)=>{
 
 app.use("/api/user", require("./routes/userRoutes"));
 
-const PORT = process.env.PORT || 5010;
+const PORT = process.env.PORT || 5012;
 
 mongoose
   .connect(process.env.MONGO_URI, {
