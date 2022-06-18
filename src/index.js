@@ -5,13 +5,17 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const credentials = require("./credentials");
+const corsOptions = require("./corsOptions");
 
 app.use(cookieParser());
+
+app.use(credentials);
+app.use(cors(corsOptions));
 
 // middleware
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
-app.use(cors());
 
 // routers
 app.get('/',(req,res)=>{
